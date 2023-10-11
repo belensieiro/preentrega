@@ -1,44 +1,20 @@
-const express = require('express')
-const bodyParser = require('body-parser')
-const { ProductManager } = require('./productsmanager')
+const express = require('express');
+const bodyParser = require('body-parser');
+const productRoutes = require('./src/productRoutes');
+const cartRoutes = require('./src/cartroutes');
+const ProductManager = require('./src/productsmanager'); 
+
 const app = express()
-const port = 3000
+const port = 8080
 
 app.use(bodyParser.json())
 
-const productManager = new ProductManager()
+const productsManager = new ProductManager() 
 
-app.get('/products', (req, res) => {
-    try {
-        const { limit } = req.query
-        const products = productManager.getProducts()
-        if (limit) {
-            const limitedProducts = products.slice(0, parseInt(limit))
-            res.json(limitedProducts)
-        } else {
-            res.json(products)
-        }
-    } catch (error) {
-        console.error("Error al obtener productos:", error.message)
-        res.status(500).json({ error: "Error al obtener productos" })
-    }
-})
-
-app.get('/products/:pid', (req, res) => {
-    try {
-        const productId = parseInt(req.params.pid)
-        const product = productManager.getProductById(productId)
-        if (product) {
-            res.json(product)
-        } else {
-            res.status(404).json({ error: "Producto no encontrado" })
-        }
-    } catch (error) {
-        console.error("Error al obtener producto:", error.message)
-        res.status(500).json({ error: "Error al obtener producto" })
-    }
-})
+app.use('/api/products', productRoutes)
+app.use('/api/carts', cartRoutes)
 
 app.listen(port, () => {
     console.log(`Servidor Express corriendo en el puerto ${port}`)
 })
+
