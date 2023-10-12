@@ -18,21 +18,24 @@ class CartManager {
         return this.carts[cartId]
     }
 
-    addProductToCart(cartId, productId, quantity) {
-        if (!quantity || quantity < 1) {
-            throw new Error('La cantidad debe ser un número positivo')
-        }
-
+    addProductToCart(cartId, productId) {
         const cart = this.carts[cartId]
         if (!cart) {
             throw new Error('Carrito no encontrado')
         }
 
-        const existingItem = cart.products.find((item) => item.product === productId)
-        if (existingItem) {
-            existingItem.quantity += quantity
+        let existingItem = cart.products.find((producto) => producto.product === productId);
+        let operacionUpdate = cart.products.findIndex((producto) => producto.product === productId);
+        if (operacionUpdate !== -1) {
+          cart.products[operacionUpdate] = {
+            product: productId,
+            quantity: existingItem.quantity + 1,
+          };
         } else {
-            cart.products.push({ product: productId, quantity })
+          cart.products.push({
+            product: productId,
+            quantity: 1,
+          });
         }
 
         this.saveToFile()

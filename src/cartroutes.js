@@ -31,10 +31,9 @@ router.get('/:cid', (req, res) => {
 
 router.post('/:cid/product/:pid', (req, res) => {
     try {
-        const cartId = req.params.cid
+        const cartId = req.params.cid;
         const productId = req.params.pid
-        const { quantity } = req.body
-        const cart = cartManager.addProductToCart(cartId, productId, quantity)
+        const cart = cartManager.addProductToCart(cartId, productId)
         if (cart) {
             res.json(cart)
         } else {
