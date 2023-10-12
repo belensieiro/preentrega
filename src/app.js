@@ -1,17 +1,17 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const productRoutes = require('./src/productRoutes');
-const cartRoutes = require('./src/cartroutes');
-const ProductManager = require('./src/productsmanager'); 
+const productRoutes = require('./productsRoutes');
+const cartRoutes = require('./cartroutes');
+const ProductManager = require('./productsmanager'); 
 
-const app = express()
-const port = 8080
+const app = express();
+const port = 808
 
 app.use(bodyParser.json())
 
-const productsManager = new ProductManager() 
+const productsManager = new ProductManager()
 
-app.use('/api/products', productRoutes)
+app.use('/api/products', productRoutes(productsManager))
 app.use('/api/carts', cartRoutes)
 
 app.listen(port, () => {

@@ -9,7 +9,7 @@ class ProductManager {
 
     addProduct(title, description, price, thumbnail, code, stock) {
         if (!this.isCodeUnique(code)) {
-            console.error("Error: El código ya existe en otro producto.")
+            console.error("Error: El código ya existe en otro producto.");
             return null
         }
 
@@ -21,7 +21,7 @@ class ProductManager {
             thumbnail: thumbnail,
             code: code,
             stock: stock
-        };
+        }
         this.products.push(product)
         this.saveToFile()
         return product
@@ -36,7 +36,7 @@ class ProductManager {
     }
 
     getProductById(productId) {
-        const product = this.products.find((product) => product.id === productId)
+        const product = this.products.find((product) => product.id === productId);
         if (product) {
             return product
         } else {
@@ -51,7 +51,7 @@ class ProductManager {
         if (productIndex !== -1) {
             if (updatedFields.code && !this.isCodeUnique(updatedFields.code)) {
                 console.error("Error: El código ya existe en otro producto.")
-                return null
+                return null;
             }
             const updatedProduct = {
                 ...this.products[productIndex],
@@ -70,7 +70,7 @@ class ProductManager {
     }
 
     deleteProduct(productId) {
-        const productIndex = this.products.findIndex((product) => product.id === productId);
+        const productIndex = this.products.findIndex((product) => product.id === productId)
         if (productIndex !== -1) {
             this.products.splice(productIndex, 1)
             this.saveToFile()
@@ -105,9 +105,9 @@ class ProductManager {
 
     getNextId() {
         const maxId = Math.max(...this.products.map((product) => product.id), 0)
-        return maxId + 1;
+        return maxId + 1
     }
 }
 
-module.exports = { ProductManager }
+module.exports = ProductManager
 
