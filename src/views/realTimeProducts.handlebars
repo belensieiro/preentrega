@@ -1,0 +1,54 @@
+<ul id="product-list">
+    {{#each products}}
+    <div id="{{this.id}}" style="display: flex; justify-content: space-between;">
+        <li>ID: {{this.id}} Titulo: {{this.title}} Descripcion: {{this.description}} Precio: {{this.price}} Imagen: {{this.thumbnail}} Codigo: {{this.code}} Stock: {{this.stock}}</li>
+        <button onclick="deleteProduct({{this.id}})">ELIMINAR</button>
+    </div>
+    {{/each}}
+</ul>
+
+<div style="margin-top: 10% ;width: 100%; display: flex; justify-content: center; align-items: center;">
+    <form id="product-form" style="display: flex; flex-direction: column; width: 20%;">
+        <input type="text" id="product-name" placeholder="Nombre">
+        <input type="text" id="product-description" placeholder="Descripcion">
+        <input type="text" id="product-price" placeholder="Precio">
+        <input type="text" id="product-thumbnail" placeholder="Imagen">
+        <input type="text" id="product-code" placeholder="Codigo">
+        <input type="text" id="product-stock" placeholder="Stock">
+        <button onclick="addProduct()">Agregar Producto</button>
+    </form>
+</div>
+
+<script src="https://cdn.socket.io/3.1.3/socket.io.min.js" integrity="sha384-cPwlPLvBTa3sKAgddT6krw0cJat7egBga3DJepJyrLl4Q9/5WLra3rrnMcyTyOnh" crossorigin="anonymous"></script>
+<script>
+    const socket = io();
+
+    function addProduct() {
+        const productName = document.getElementById('product-name').value;
+        const productDescription = document.getElementById('product-description').value;
+        const productPrice = document.getElementById('product-price').value;
+        const productThumbnail = document.getElementById('product-thumbnail').value;
+        const productCode = document.getElementById('product-code').value;
+        const productStock = document.getElementById('product-stock').value;
+
+         if (!productName || !productDescription || !productPrice || !productThumbnail || !productCode || productStock === undefined) {
+            console.error("Error: Faltan campos obligatorios para agregar el producto.");
+            return null;
+        }
+
+        let product = {"title": productName, "description": productDescription, "price": productPrice, "thumbnail": productThumbnail, "code": productCode, "stock": productStock}
+        socket.emit('updateProduct', { action: 'add', product: product });
+    }
+
+    socket.on('deleteProduct', (productId) => {
+        const listBody = document.getElementById('product-list');
+        const listItem = document.getElementById(productId);
+        if (listItem) {
+        listBody.removeChild(listItem);
+        }
+    });
+
+    function deleteProduct(id){
+        socket.emit('updateProduct', { action: 'delete', Id: id });
+    }
+</script>
